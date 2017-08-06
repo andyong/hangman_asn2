@@ -1,0 +1,83 @@
+<!DOCTYPE HTML>
+<!-- we don't use appcache because we are still developing the hangman.js file -->
+<!--<html class="no-js" manifest="static/hangman.appcache"> -->
+<html>
+<head>
+<meta charset="utf-8">
+<title>Hangman</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="static/styles/hangman.css" rel="stylesheet" type="text/css">
+<!--[if lte IE 8]>
+    <script src="scripts/excanvas.js"></script>
+<![endif]-->
+
+<script src="static/scripts/modernizr.hangman.js"></script>
+<script>
+Modernizr.load([{
+    test: Modernizr.canvastext,
+    nope: ["static/scripts/canvas.text.js", "static/scripts/optimer-bold-normal.js"]
+},
+{
+    test: Modernizr.localstorage,
+    nope: ["static/scripts/json2.js", "static/scripts/storage_polyfill.js"],
+    both: ["static/scripts/jquery-1.7.min.js", "static/scripts/hangman_social.js"],
+    complete: function() {
+        init();
+    }
+}]);
+
+</script>
+</head>
+
+<body>
+<h1>Social Hangman!</h1>
+<p id="warning">JavaScript must be enabled to play this game.</p>
+<div id="help"></div>
+<div id="helptext">
+    <h2>How to Play</h2>
+    <div id="close"></div>
+    <p>Hangman is a word-guessing game. Click or tap New Game to display the letters of the alphabet and a row of dashes indicating the number of letters to be guessed. Click or tap a letter. If it's in the word, it replaces the dash(es). Each wrong guess results in a stroke being added to a gallows and its victim. Your role is to guess the word correctly before the victim meets his grisly fate.</p>
+</div>
+<div id="authentication">
+    {% if signed_in %}
+        <div id="signedin">
+            Welcome {{ sign_in_name }}!<br>
+            <input id="word_input" class="inputfield" type="text" name="word" placeholder="Word"><br>
+            <input id="hint_input" class="inputfield" type="text" name="hint" placeholder="Hint"><br>
+            <div id="creategame">Create new game</div>
+        </div>
+    {% else %}
+        <div id="notsignedin">
+            <input id="username_input" class="inputfield" type="text" name="username" placeholder="User name"><br>
+            <input id="password_input" class="inputfield" type="password" name="password" placeholder="Password"><br>
+            <div id="signin">Sign In</div><br>
+            <div id="signup">Sign Up</div><br>
+            <div id="oauthsignin">Sign in with OAuth 2.0</div>
+        </div>
+    {% endif %}
+</div>
+<div id="gamelist">
+
+    {% for game in game_list %}
+        <p>
+            {% if signed_in %}
+                <input class="delete_radio" type="radio" name="delete_game" value="{{game.game_id}}">
+            {% endif %}
+            {{- game.word_length }} letter word -
+            {% if signed_in %}
+                <a href="/games/{{ game.game_id }}" >{{ game.hint }}</a>
+            {% else %}
+                {{ game.hint }}
+            {% endif %}
+        </p>
+    {% endfor %}
+    <br>
+    {% if signed_in %}
+        <div id="deletebutton">delete game</div>
+    {% endif %}
+</div>
+
+
+<div id="letters"></div>
+</body>
+</html>

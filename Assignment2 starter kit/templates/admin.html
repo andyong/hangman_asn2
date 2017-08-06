@@ -1,0 +1,61 @@
+<!DOCTYPE HTML>
+<!-- we don't use appcache because we are still developing the hangman.js file -->
+<!--<html class="no-js" manifest="{{ url_for('static', filename='hangman.appcache') }}"> --> 
+<html>
+<head>
+<meta charset="utf-8">
+<title>Hangman Admin</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="{{ url_for('static', filename='styles/hangman.css') }}" rel="stylesheet" type="text/css">
+<!--[if lte IE 8]>
+    <script src="scripts/excanvas.js"></script>
+<![endif]-->
+<script src="{{ url_for('static', filename='scripts/modernizr.hangman.js') }}"></script>
+<script>
+
+Modernizr.load([{
+    test: Modernizr.canvastext,
+    nope: ["{{ url_for('static', filename='scripts/canvas.text.js') }}", "{{ url_for('static', filename='scripts/optimer-bold-normal.js') }}"]
+},
+{
+    test: Modernizr.localstorage,
+    nope: ["{{ url_for('static', filename='scripts/json2.js') }}", "{{ url_for('static', filename='scripts/storage_polyfill.js') }}"],
+    both: ["{{ url_for('static', filename='scripts/jquery-1.7.min.js') }}", "{{ url_for('static', filename='scripts/hangman_admin.js') }}"],
+    complete: function() {
+        init();
+    }
+}]);
+
+
+</script>
+</head>
+
+<body>
+<h1>Hangman Admin</h1>
+<p id="warning">JavaScript must be enabled to play this game.</p>
+
+<div>
+    <div id="left-div">
+        <div id="players">Get Players</div> <br>
+        <input class="select_radio" type="radio" name="player_sortby" value="wins">Wins
+        <input class="select_radio" type="radio" name="player_sortby" value="losses">Losses
+        <input class="select_radio" type="radio" name="player_sortby" value="alphabetical" checked>Alphabetical
+        <br>
+        <input class="select_radio" type="radio" name="player_order" value="asc" checked>Asc
+        <input class="select_radio" type="radio" name="player_order" value="desc">Desc
+    </div>
+    <div id="right-div">
+        <div id="words">Get Words</div><br>
+        <input class="select_radio" type="radio" name="words_sortby" value="solved">Solved
+        <input class="select_radio" type="radio" name="words_sortby" value="length">Length
+        <input class="select_radio" type="radio" name="words_sortby" value="alphabetical" checked>Alphabetical
+        <br>
+        <input class="select_radio" type="radio" name="words_order" value="asc" checked>Asc
+        <input class="select_radio" type="radio" name="words_order" value="desc">Desc
+    </div>
+</div>
+<br>
+<div id="data"></div>
+
+</body>
+</html>

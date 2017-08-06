@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<!-- we don't use appcache because we are still developing the hangman.js file -->
+<!--<html class="no-js" manifest="{{ url_for('static', filename='hangman.appcache') }}"> --> 
+<html>
+<head>
+<meta charset="utf-8">
+<title>Hangman</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="{{ url_for('static', filename='styles/hangman.css') }}" rel="stylesheet" type="text/css">
+<!--[if lte IE 8]>
+    <script src="scripts/excanvas.js"></script>
+<![endif]-->
+<script src="{{ url_for('static', filename='scripts/modernizr.hangman.js') }}"></script>
+<script>
+var word_length = {{ '%d' % game_property.word_length if game_property else 0}};
+var game_id = "{{ '%s' % game_property.game_id if game_property}}";
+Modernizr.load([{
+    test: Modernizr.canvastext,
+    nope: ["{{ url_for('static', filename='scripts/canvas.text.js') }}", "{{ url_for('static', filename='scripts/optimer-bold-normal.js') }}"]
+},
+{
+    test: Modernizr.localstorage,
+    nope: ["{{ url_for('static', filename='scripts/json2.js') }}", "{{ url_for('static', filename='scripts/storage_polyfill.js') }}"],
+    both: ["{{ url_for('static', filename='scripts/jquery-1.7.min.js') }}", "{{ url_for('static', filename='scripts/hangman.js') }}"],
+    complete: function() {
+        init();
+    }
+}]);
+
+
+</script>
+</head>
+
+<body>
+<h1>Hangman</h1>
+<p id="warning">JavaScript must be enabled to play this game.</p>
+<div id="help"></div>
+<div id="helptext">
+    <h2>How to Play</h2>
+    <div id="close"></div>
+    <p>Hangman is a word-guessing game. Click or tap New Game to display the letters of the alphabet and a row of dashes indicating the number of letters to be guessed. Click or tap a letter. If it's in the word, it replaces the dash(es). Each wrong guess results in a stroke being added to a gallows and its victim. Your role is to guess the word correctly before the victim meets his grisly fate.</p>
+</div>
+<p id="loading">Game loading. . .</p>
+<canvas id="stage" width="200" height="200">Sorry, your browser needs to support canvas for this game.</canvas>
+<div id="play">New Game</div> <div id="clear">Clear Score</div>
+<p> {{ '%s' % game_property.hint if game_property }} </p>
+<p id="word"></p>
+<div id="letters"></div>
+
+</body>
+</html>
